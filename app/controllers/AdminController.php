@@ -1,11 +1,14 @@
 <?php 
 require_once (__DIR__.'/../models/User.php');
+require_once (__DIR__.'/../models/Category.php');
 
 class AdminController extends BaseController {
-    private $UserModel ;
+    private $UserModel;
+    private $CatModel;
     public function __construct(){
 
         $this->UserModel = new User();
+        $this->CatModel = new Category();
   
         
      }
@@ -21,7 +24,8 @@ class AdminController extends BaseController {
    }
    
    public function categories() {
-      $this->renderDashboard('admin/categories');
+      $categories = $this->CatModel->getAllCategories();
+      $this->renderDashboard('admin/categories', ["categories" => $categories]);
    }
    public function testimonials() {
       $this->renderDashboard('admin/testimonials');
@@ -40,11 +44,9 @@ class AdminController extends BaseController {
          $this->renderDashboard('admin/users',["users"=> $users]);
    }
    public function removeUser(){
-         
          $user_id = $_POST['remove_user'];
          $this->UserModel->removeUser($user_id);
-         $this->handleUsers();
-      
+         $this->handleUsers();  
    }
    public function changeStatus(){
       // check the post request to block the user
@@ -55,47 +57,71 @@ class AdminController extends BaseController {
       $this->handleUsers();
    }
 
-    // function to remove user
-    // function removeUser($idUser){
-    //     include '../connection.php';
-    //     $removeUser = $conn->prepare("DELETE FROM utilisateurs WHERE id_utilisateur=?");
-    //     $removeUser->execute([$idUser]);
-    // }
-    
-    // // check the post request to remove the user
-    // if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['remove_user'])) {
-    //     $idUser = $_POST['remove_user'];
-    //     removeUser($idUser);
-    //     // Redirect to avoid form resubmission after page reload
-    //     header("Location: users.php");
-    //     exit();
-    // }
+   public function crudCategory(){
+      if ($_SERVER["REQUEST_METHOD"] == "POST") {
+         if (isset($_POST["add_modify_category"])) {
+             $category_name = trim($_POST["category_name_input"]);
+             $category_id = isset($_POST["category_id_input"]) ? trim($_POST["category_id_input"]) : '';
+             if (!empty($category_name)) {
+                 if($category_id==0){
+                     $this->CatModel->AddCategory($category_name);
+                     header("Location: /admin/categories");
+                     exit();
+                 }else{
+                     $this->CatModel->UpdateCategory($category_id,$category_name);
+                     header("Location: /admin/categories");
+                     exit();
+                 }
+                 
+             } 
+         }
+         if (isset($_POST["add_modify_subcategory"])) {
+            $subcategory_name = trim($_POST["subcategory_name_input"]);
+            $category_id = $_POST["category_parent_id_input"];
+            $subcategory_id = (int)trim($_POST["subcategory_id_input"]);
+            
 
-    // // function to block user
-    // function changeStatus($idUser){
-    //     include '../connection.php';
+            if (!empty($subcategory_name)) {
+                if($subcategory_id==0){
+                    $this->CatModel->AddSubCategory($category_id,$subcategory_name);
+                    header("Location: /admin/categories");
+                     exit();
+                }
+                else{
+                    $this->CatModel->UpdateSubCategory($subcategory_id,$subcategory_name); 
+                    header("Location: /admin/categories");
+                     exit();
+                }
+                
+            } 
+            
+        } 
+        if (isset($_POST["delete_categorie"])) {
+         $id_categorie=$_POST['id_categorie'];
+ 
+         $this->CatModel->DeleteCategory($id_categorie);
+         header("Location: /admin/categories");
+         exit();
+     }
+ 
+     // delete subcategorie
+     if (isset($_POST["delete_sub_category"])) {
+         $id_sous_categorie=$_POST['id_sub_categorie'];
+         $this->CatModel->DeleteSubCategory($id_sous_categorie);
+         header("Location: /admin/categories");
+         exit();
+     }
 
-    //     // get the old status
-    //     $stmt = $conn->prepare("SELECT is_active FROM utilisateurs WHERE id_utilisateur = ?");
-    //     $stmt->execute([$idUser]);
-    //     $currentStatus = $stmt->fetchColumn();
 
-    //     $changeStatus = $conn->prepare("UPDATE utilisateurs SET is_active=? WHERE id_utilisateur=?");
-    //     $changeStatus->execute([$currentStatus==0?1:0,$idUser]);
-    // }
-    // // check the post request to block the user
-    // if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['block_user_id'])) {
-    //     $idUser = $_POST['block_user_id'];
-    //     changeStatus($idUser);
-    //     // Redirect to avoid form resubmission after page reload
-    //     header("Location: users.php");
-    //     exit();
-    // }
-
-
-
-
+   }
+   
 
  
+
+
+
+
+
+}
 
 }

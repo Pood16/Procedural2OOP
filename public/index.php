@@ -31,6 +31,7 @@ Route::post('/logout', [AuthController::class, 'logout']);
 Route::get('/admin', [AdminController::class, 'index']);
 Route::get('/admin/users', [AdminController::class, 'handleUsers']);
 Route::get('/admin/categories', [AdminController::class, 'categories']);
+Route::get('/admin/categories/crud', [AdminController::class, 'crudCategory']);
 Route::get('/admin/testimonials', [AdminController::class, 'testimonials']);
 Route::get('/admin/projects', [AdminController::class, 'projects']);
 Route::post('/admin/users/delete', [AdminController::class, 'removeUser']);
