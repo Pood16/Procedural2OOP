@@ -41,9 +41,7 @@
                                 <th
                                     class="px-6 py-3 text-xs font-medium leading-4 tracking-wider text-left text-gray-500 uppercase border-b border-gray-200 bg-gray-50">
                                     Name</th>
-                                <th
-                                    class="px-6 py-3 text-xs font-medium leading-4 tracking-wider text-left text-gray-500 uppercase border-b border-gray-200 bg-gray-50">
-                                    Title</th>
+                                
                                 <th
                                     class="px-6 py-3 text-xs font-medium leading-4 tracking-wider text-left text-gray-500 uppercase border-b border-gray-200 bg-gray-50">
                                     Status</th>
@@ -71,9 +69,7 @@
                                         </div>
                                     </td>
 
-                                    <td class="px-6 py-4 whitespace-no-wrap border-b border-gray-200">
-                                        <div class="text-sm leading-5 text-gray-900 w-full"><?= $user['title'] !== null ? htmlspecialchars($user['title']) : ''; ?></div>
-                                    </td>
+                                  
 
                                     <td class="px-6 py-4 whitespace-no-wrap border-b border-gray-200">
                                         <form method="POST" action="/admin/users/status" style="display:inline;" onsubmit="return confirm('Are you sure you want to change the status of this user?');">

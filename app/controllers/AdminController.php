@@ -3,11 +3,13 @@ require_once (__DIR__.'/../models/User.php');
 require_once (__DIR__.'/../models/Category.php');
 require_once (__DIR__.'/../models/SubCategory.php');
 require_once (__DIR__.'/../models/Project.php');
+require_once (__DIR__.'/../models/Testimonial.php');
 
 class AdminController extends BaseController {
     private $UserModel;
     private $CatModel;
     private $subCatModel;
+    private $testimonialModel;
 
     public function __construct(){
 
@@ -15,6 +17,7 @@ class AdminController extends BaseController {
         $this->CatModel = new Category();
         $this->subCatModel = new SubCategory();
         $this->projectModel = new Project();
+        $this->testimonialModel = new Testimonial();
      }
 
     public function index() {
@@ -27,13 +30,16 @@ class AdminController extends BaseController {
         $this->renderDashboard('admin/index', ["statistics" => $statistics]);
     }
    
-   public function categories() {
+    public function categories() {
        $categories = $this->CatModel->getAllCategories();
        $this->renderDashboard('admin/categories', ["categories" => $categories]);
-    }
+    } 
+
    public function testimonials() {
-      $this->renderDashboard('admin/testimonials');
+       $clientTestimonials = $this->testimonialModel->getTestimonials();
+       $this->renderDashboard('admin/testimonials', ["clientTestimonials" => $clientTestimonials]);
    }
+   
    public function projects() {
 
       // Get filter and search values from GET
@@ -137,5 +143,7 @@ class AdminController extends BaseController {
             exit();
         }
     }
+
+    
 
 }
