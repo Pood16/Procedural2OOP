@@ -20,10 +20,12 @@ public function register($user) {
 
 public function login($userData){
     
-    try {
+    
         $result = $this->connection->prepare("SELECT * FROM utilisateurs WHERE email=?");
         $result->execute([$userData[0]]);
         $user = $result->fetch(PDO::FETCH_ASSOC);
+        // $user = $result->fetch();
+       
 
         if($user && password_verify($userData[1], $user["mot_de_passe"])){
            
@@ -31,9 +33,7 @@ public function login($userData){
            return  $user ;
         
         }
-    } catch (PDOException $e) {
-        echo "Error: " . $e->getMessage();
-    }
+    
 }
 
 public function getStatistics() {
